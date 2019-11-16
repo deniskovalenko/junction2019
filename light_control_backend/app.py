@@ -20,8 +20,17 @@ def deals():
     state = light_control.get_state()
     return jsonify(state)
 
+@app.route('/api/v1/update_light', methods=['POST'])
+def update_light():
+    print("got update light request")
+    print(request.get_json())
+    lightChangeRequest = request.get_json()
+    res = light_control.update_light(lightChangeRequest)
+    result = {"status": res}
+    return jsonify(result)
+
 @app.route('/api/v1/set_light', methods=['POST'])
-def routes():
+def set_light():
     print("got set light request")
     print(request.get_json())
     lightChangeRequest = request.get_json()

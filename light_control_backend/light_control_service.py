@@ -49,6 +49,24 @@ class LightControlService(object):
         return self.cache
 
     '''
+        Updates lamp status without logging it
+        structure:
+        device_id
+        light_level_value
+        color_temperature_value
+        '''
+
+    def update_light(self, light_settings):
+        device_id = light_settings["device_id"]
+        new_settings = light_settings["settings"]
+        light_level_value = new_settings["light_level_value"]
+        color_temperature_value = new_settings["color_temperature_value"]
+
+        self.update_light_settings(device_id, light_level_value, color_temperature_value)
+        return "OK"
+
+    '''
+    Sets new state and logs request to DB
     structure:
     device_id
     light_level_value
