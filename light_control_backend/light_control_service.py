@@ -7,6 +7,13 @@ import serial
 import serial.tools.list_ports
 from datetime import datetime
 import uuid
+from elasticsearch import Elasticsearch
+es = Elasticsearch(["es-104ee62-denis-d703.aivencloud.com"],
+                   http_auth=("avnadmin", "djzkgdjs8m7qqujk"),
+                   scheme="https",
+                   port=10558)
+print(es.info())
+
 
 # Light level values in percentage (0 no light, 100 full brightness)
 LIGHT_LEVEL_ARRAY = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 52, 55, 58, 60, 63, 65, 68, 70, 73, 75, 78, 80, 82, 85,
@@ -75,6 +82,11 @@ class LightControlService(object):
 
     def set_light(self, light_settings):
         device_id = light_settings["device_id"]
+        type = None
+        if "type" in light_settings:
+            type = light_settings["type"]
+        else:
+            type = "tmp_update"
         new_settings = light_settings["settings"]
         light_level_value = new_settings["light_level_value"]
         color_temperature_value = new_settings["color_temperature_value"]
@@ -90,7 +102,7 @@ class LightControlService(object):
         self.cache[device_id] = settings_to_save
 
         self.update_light_settings(device_id, light_level_value, color_temperature_value)
-        self.log_update(device_id, previous_state, settings_to_save)
+        self.log_update(device_id, previous_state, settings_to_save, type)
         return "OK"
 
 
@@ -100,15 +112,18 @@ class LightControlService(object):
                                                light_level_value,
                                                color_temperature_value)
 
-    def log_update(self, device_id, previous_state, new_settings):
+    def log_update(self, device_id, previous_state, new_settings, type  ):
         log_object = {"id": new_settings["id"],
                       "device_id": device_id,
                       "location": "meeting_room_hq13-2",
                       "user": "denisk",
-                      "timestamp": datetime.now().isoformat(),
+                      "timestamp": datetime.utcnow().isoformat(),
                       "previous_state": previous_state,
-                      "settings": new_settings["settings"]}
+                      "settings": new_settings["settings"],
+                      "type": type}
         print(log_object)
+        res = es.index(index='light_update_events', doc_type='light_update', body=log_object)
+        print("written to Elastic, result " + str(res))
 
     def init_serial_port(self, _port):
         if not _port:

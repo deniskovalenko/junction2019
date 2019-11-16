@@ -8,7 +8,7 @@ import Vtt60Processed.Sample as Vtt60Processed
 
 
 class Streamer60():
-    def __init__(self,url='localhost',topic='radar60',only_latest=False):
+    def __init__(self,url='10.84.110.2',topic='radar60',only_latest=False):
 
         self.url = url
         self.topic = topic
@@ -47,6 +47,14 @@ class Streamer60():
         # {'amplitude':[1.3,4.4,5...],
         # 'angle': [0.04,0.1,...]}
         sample_dict = self.deserialize_vtt_60_processed(body)
+
+        with open('sample.txt', 'a') as f:
+            x_arrstr = np.char.mod('%d', sample_dict['amplitude'])
+            raw_data = ",".join(x_arrstr.flatten())
+            f.write(raw_data)
+            f.write('\n')
+
+
         if body is None or sample_dict is None:
             print('Stream stopped.')
             return

@@ -46,13 +46,14 @@ export class Demo extends Component {
             });
     }
 
-    setLight() {
+    setLight(type) {
         axios.post('http://localhost:8070/api/v1/set_light', {
             device_id: this.state.device_id,
             settings: {
                 light_level_value: this.state.brightness,
                 color_temperature_value: this.state.color_temperature
-            }
+            },
+            type: type
         })
             .then(function (response) {
                 console.log(response);
@@ -74,20 +75,20 @@ export class Demo extends Component {
 
     save_brightness(val) {
         console.log("saving brightnesss to " + val);
-        this.setLight()
+        this.setLight("brightness")
 
     }
 
     save_color_temperature(val) {
         console.log("saving color temperature to " + val);
-        this.setLight()
+        this.setLight("color")
     }
 
     render() {
         const {max, min, step, radius, color} = this.state;
         return (
             <div>
-
+                <div style={{margin: "auto"}}>
                 <Roundy
                     allowClick
                     value={this.state.brightness}
@@ -107,7 +108,8 @@ export class Demo extends Component {
                         this.save_brightness(props.value)
                     }}
                 />
-
+                </div>
+                <div style={{margin: "auto"}}>
                 <Roundy
                     allowClick
                     value={this.state.color_temperature}
@@ -127,6 +129,7 @@ export class Demo extends Component {
                         this.save_color_temperature(props.value)
                     }}
                 />
+                </div>
 
 
                 <div>

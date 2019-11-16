@@ -7,7 +7,7 @@ import matplotlib.animation as animation
 import tkinter
 
 data_folder = "data/meeting/office_full/"
-office_data = np.loadtxt(data_folder + 'amplitude/amplitude01',delimiter=',')
+office_data = np.loadtxt('sample.txt',delimiter=',')
 office_data = np.reshape(office_data,(office_data.shape[0],180,110))
 matplotlib.use('TkAgg')
 ims = []
