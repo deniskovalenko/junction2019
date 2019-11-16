@@ -89,7 +89,8 @@ export class Demo extends Component {
         const {max, min, step, radius, color} = this.state;
         return (
             <div>
-                <div style={{margin: "auto"}}>
+            <div>
+
                 <Roundy
                     allowClick
                     value={this.state.brightness}
@@ -110,7 +111,9 @@ export class Demo extends Component {
                     }}
                 />
                 </div>
-                <div style={{margin: "auto"}}>
+                <br/>  Brightness
+
+                <div>
                 <Roundy
                     allowClick
                     value={this.state.color_temperature}
@@ -131,6 +134,7 @@ export class Demo extends Component {
                     }}
                 />
                 </div>
+                <br/> Color Temperature
 
 
                 <div>
