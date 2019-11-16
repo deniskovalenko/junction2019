@@ -53,7 +53,8 @@ export class Demo extends Component {
                 light_level_value: this.state.brightness,
                 color_temperature_value: this.state.color_temperature
             },
-            type: type
+            type: type,
+            user: "elizaveta"
         })
             .then(function (response) {
                 console.log(response);
