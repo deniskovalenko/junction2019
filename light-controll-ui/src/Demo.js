@@ -131,7 +131,12 @@ export class Demo extends Component {
 
                 <div>
                     Brightness: {this.state.brightness}<br/>
-                    Color temperature: {this.state.color_temperature}
+                    Color temperature: {this.state.color_temperature}<br/>
+                    Device:
+                    <input
+                    value={this.state.device_id}
+                    onChange={e => this.setState({device_id: e.target.value})}
+                    type="text"/>
                 </div>
                 {/*<RoundyGroup sliders={[*/}
                 {/*{*/}

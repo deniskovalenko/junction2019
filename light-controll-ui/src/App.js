@@ -7,8 +7,12 @@ import {Demo} from './Demo';
 function App() {
   return (
     <div className="App">
-        <Demo/>
-        <div id="demo"/>
+        <div  style={{
+            position: 'absolute', left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)'
+        }}>
+            <Demo/>
+        </div>
       {/*<header className="App-header">*/}
         {/*<img src={logo} className="App-logo" alt="logo" />*/}
         {/*<p>*/}
