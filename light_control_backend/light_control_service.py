@@ -82,11 +82,15 @@ class LightControlService(object):
 
     def set_light(self, light_settings):
         device_id = light_settings["device_id"]
-        type = None
         if "type" in light_settings:
             type = light_settings["type"]
         else:
             type = "tmp_update"
+
+        if "user" in light_settings:
+            user = light_settings["user"]
+        else:
+            user = "denisk"
         new_settings = light_settings["settings"]
         light_level_value = new_settings["light_level_value"]
         color_temperature_value = new_settings["color_temperature_value"]
@@ -102,7 +106,7 @@ class LightControlService(object):
         self.cache[device_id] = settings_to_save
 
         self.update_light_settings(device_id, light_level_value, color_temperature_value)
-        self.log_update(device_id, previous_state, settings_to_save, type)
+        self.log_update(device_id, previous_state, settings_to_save, type, user)
         return "OK"
 
 
@@ -112,17 +116,17 @@ class LightControlService(object):
                                                light_level_value,
                                                color_temperature_value)
 
-    def log_update(self, device_id, previous_state, new_settings, type  ):
+    def log_update(self, device_id, previous_state, new_settings, type, user):
         log_object = {"id": new_settings["id"],
                       "device_id": device_id,
                       "location": "meeting_room_hq13-2",
-                      "user": "denisk",
+                      "user": user,
                       "timestamp": datetime.utcnow().isoformat(),
                       "previous_state": previous_state,
                       "settings": new_settings["settings"],
                       "type": type}
         print(log_object)
-        res = es.index(index='light_update_events', doc_type='light_update', body=log_object)
+        res = es.index(index='my_test', body=log_object)
         print("written to Elastic, result " + str(res))
 
     def init_serial_port(self, _port):
