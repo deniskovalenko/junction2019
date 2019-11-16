@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Roundy from 'roundy';
 import RoundyGroup from 'roundy';
-
+import axios from 'axios';
 
 export class Demo extends Component {
     constructor(props) {
@@ -13,24 +13,74 @@ export class Demo extends Component {
             step: 10,
             brightness: 30,
             color_temperature: 5100,
-            radius: 100
-        }
+            radius: 100,
+            device_id: "EC22"
+        };
+        const tmp = this;
+        axios.get('http://localhost:8070/api/v1/get_state')
+            .then(function (response) {
+                console.log(response);
+                if (response.data) {
+                    tmp.setState({brightness: response.data[tmp.state.device_id].settings.light_level_value});
+                    tmp.setState({color_temperature: response.data[tmp.state.device_id].settings.color_temperature_value});
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    updateState() {
+        axios.post('http://localhost:8070/api/v1/update_light', {
+            device_id: this.state.device_id,
+            settings: {
+                light_level_value: this.state.brightness,
+                color_temperature_value: this.state.color_temperature
+            }
+        })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    setLight() {
+        axios.post('http://localhost:8070/api/v1/set_light', {
+            device_id: this.state.device_id,
+            settings: {
+                light_level_value: this.state.brightness,
+                color_temperature_value: this.state.color_temperature
+            }
+        })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     update_brightness(val) {
         console.log("updating brightnesss to " + val);
+        this.updateState()
     }
 
     update_color_temperature(val) {
         console.log("updating color temperature to " + val);
+        this.updateState()
     }
 
     save_brightness(val) {
         console.log("saving brightnesss to " + val);
+        this.setLight()
+
     }
 
     save_color_temperature(val) {
         console.log("saving color temperature to " + val);
+        this.setLight()
     }
 
     render() {
@@ -49,7 +99,7 @@ export class Demo extends Component {
                     arcSize={300}
                     sliced={false}
                     onChange={brightness => {
-                        this.setState({brightness});
+                        this.setState({brightness: brightness});
                         this.update_brightness(brightness)
                     }}
                     onAfterChange={(color_temperature, props) => {
@@ -69,13 +119,12 @@ export class Demo extends Component {
                     arcSize={300}
                     sliced={false}
                     onChange={color_temperature => {
-                        this.setState({color_temperature});
+                        this.setState({color_temperature: color_temperature});
                         this.update_color_temperature(color_temperature)
                     }}
                     onAfterChange={(color_temperature, props) => {
                         this.setState({color_temperature: props.value});
                         this.save_color_temperature(props.value)
-
                     }}
                 />
 
