@@ -24,24 +24,30 @@ def return_15_fps(frames):
     return(averages[1:,:])
 
 
-data_folder = "data/office_full/"
-rolling = 100
-office_data = np.loadtxt(data_folder + 'amplitude/amplitude01',delimiter=',')
-averages_from_file = return_15_fps(office_data)
-
+data_folder = "data/"
+rolling = 15
+office_data = np.loadtxt(data_folder + 'demo_short.txt', delimiter=',')
+print(office_data.shape)
+# office_data = return_15_fps(office_data)
+print(office_data.shape)
 df = pd.DataFrame(office_data)
+print("original df shape" + str(df.shape))
 df_ma = pd.DataFrame(office_data).rolling(rolling).mean()
-denoised = np.reshape((df.loc[rolling:,:]-df_ma.loc[rolling:,:]).to_numpy(),(df.loc[rolling:,:].shape[0],180,110))
+print("rolling df shape" + str(df_ma.shape))
+# office_data = np.reshape((df.loc[rolling:,:]-df_ma.loc[rolling:,:]).to_numpy(),(df.loc[rolling:,:].shape[0],180,110))
+office_data = np.reshape(office_data,(office_data.shape[0],180,110))
 
-
-office_data = np.reshape(denoised,(denoised.shape[0],180,110))
+print(office_data.shape)
 matplotlib.use('TkAgg')
 ims = []
 fig = plt.figure()
-for i in range(5,600-rolling):
-    im = plt.imshow(np.clip(abs(office_data[i, :, :]-office_data[i-1, :, :]), a_min=5, a_max=None))
+for i in range(rolling, office_data.shape[0]):
+    # im = plt.imshow(np.clip(abs(office_data[i, :, :]-office_data[i-1, :, :]), a_min=0, a_max=None))
+    details_removed = np.clip(office_data[i, :, :], a_min=0, a_max=None)
+    details_removed = np.clip(details_removed[:, :], a_min=90, a_max=None)
+    im = plt.imshow(details_removed)
     ims.append([im])
 
-ani = animation.ArtistAnimation(fig, ims, interval=20, blit=True,
-                                repeat_delay=1000)
+ani = animation.ArtistAnimation(fig, ims, interval=38, blit=True, repeat=False)
+                                # repeat_delay=1000)
 plt.show()
