@@ -1,25 +1,25 @@
-import sys
-import os
-import datetime, time
-import decimal
-import serial
-import serial.tools.list_ports
-
-# Light level values in percentage (0 no light, 100 full brightness)
-LIGHT_LEVEL_ARRAY = [0,   5,   10,  15,  20,  25,  30,  35,  40,  45,  50,  52,   55,  58,  60,  63,  65,  68,  70,  73,  75,  78,  80,  82,  85,  88,  90,  93,  95,  98,  100]
-# Mapped values of brigthness in DALI (light control protocol) commands HEX values
-DALI_LIGHT_LEVEL_HEX_ARRAY = ["00","90","AA","B9","C4","CB","D2","D8","DD","E1","E5","E6","E8","EA","EB","ED","EE","F0","F1","F3","F4","F5","F6","F7","F8","F9","FA","FB","FC","FD","FE"]
-
-# Color temperature in Kelvin, 6500K is the coolest temperature, 2700K is the warmest
-COLOUR_TEMPERATURE_ARRAY   =  [6500,   6400,  6300,   6200,  6100,  6000,  5900,  5800,  5700,   5600,  5500,   5400,  5300,  5200,  5100,   5000,  4900,   4800,  4700,   4600,  4500,   4400,  4300,   4200,  4100,   4000,  3900,   3800,  3700,   3600,  3500,   3400,  3300,   3200,  3100,    3000,  2900,   2800,  2700]
-# Mapped values of color temperature to in HEX
-COLOUR_TEMPERATURE_HEX_ARRAY = ["1964","1900", "189C","1838","17D4","1770","170c","16A8","1644","15E0","157C","1518","14B4","1450","13EC","1388","1324","12C0","125C","11F8","1194","1130",    "10CC","1068","1004","0FA0", "0F3C", "0ED8", "0E74", "0E10","0DAC","0D48", "0CE4","0C80","0C1C" ,"0BB8", "0B54","0AF0", "0A8C"]
-
-LUMINAIRE_ID = "EC22" #Example A1B3
-
-# "00" - manual mode, you are in full controll of luminaire, PIR is off
-# "01" - automatic , mode PIR sensor is in use, luminaire goes on when triggered and off after occupancy timeout
-LUMIAIRE_MODE = "00"
+# import sys
+# import os
+# import datetime, time
+# import decimal
+# import serial
+# import serial.tools.list_ports
+#
+# # Light level values in percentage (0 no light, 100 full brightness)
+# LIGHT_LEVEL_ARRAY = [0,   5,   10,  15,  20,  25,  30,  35,  40,  45,  50,  52,   55,  58,  60,  63,  65,  68,  70,  73,  75,  78,  80,  82,  85,  88,  90,  93,  95,  98,  100]
+# # Mapped values of brigthness in DALI (light control protocol) commands HEX values
+# DALI_LIGHT_LEVEL_HEX_ARRAY = ["00","90","AA","B9","C4","CB","D2","D8","DD","E1","E5","E6","E8","EA","EB","ED","EE","F0","F1","F3","F4","F5","F6","F7","F8","F9","FA","FB","FC","FD","FE"]
+#
+# # Color temperature in Kelvin, 6500K is the coolest temperature, 2700K is the warmest
+# COLOUR_TEMPERATURE_ARRAY   =  [6500,   6400,  6300,   6200,  6100,  6000,  5900,  5800,  5700,   5600,  5500,   5400,  5300,  5200,  5100,   5000,  4900,   4800,  4700,   4600,  4500,   4400,  4300,   4200,  4100,   4000,  3900,   3800,  3700,   3600,  3500,   3400,  3300,   3200,  3100,    3000,  2900,   2800,  2700]
+# # Mapped values of color temperature to in HEX
+# COLOUR_TEMPERATURE_HEX_ARRAY = ["1964","1900", "189C","1838","17D4","1770","170c","16A8","1644","15E0","157C","1518","14B4","1450","13EC","1388","1324","12C0","125C","11F8","1194","1130",    "10CC","1068","1004","0FA0", "0F3C", "0ED8", "0E74", "0E10","0DAC","0D48", "0CE4","0C80","0C1C" ,"0BB8", "0B54","0AF0", "0A8C"]
+#
+# LUMINAIRE_ID = "EC22" #Example A1B3
+#
+# # "00" - manual mode, you are in full controll of luminaire, PIR is off
+# # "01" - automatic , mode PIR sensor is in use, luminaire goes on when triggered and off after occupancy timeout
+# LUMIAIRE_MODE = "00"
 
 def get_serial_port():
     ports = list(serial.tools.list_ports.comports())

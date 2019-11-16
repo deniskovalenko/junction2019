@@ -15,17 +15,19 @@ def build_path():
     return "light control API. Send POST to /api/v1/set_light"
 
 
-@app.route('/deals')
+@app.route('/api/v1/get_state')
 def deals():
-    deals = deals_service.getPipeDriveDeals()
-    return jsonify(deals)
+    state = light_control.get_state()
+    return jsonify(state)
 
 @app.route('/api/v1/set_light', methods=['POST'])
 def routes():
+    print("got set light request")
+    print(request.get_json())
     lightChangeRequest = request.get_json()
     res = light_control.set_light(lightChangeRequest)
-
-    return jsonify(routeInfo)
+    result = {"status": res, "current_state": light_control.get_state()}
+    return jsonify(result)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=8080)
+    app.run(host='0.0.0.0',port=8070)
