@@ -85,6 +85,8 @@ class LightControlService(object):
     def log_update(self, device_id, previous_state, new_settings):
         log_object = {"id": new_settings["id"],
                       "device_id": device_id,
+                      "location": "meeting_room_hq13-2",
+                      "user": "denisk",
                       "timestamp": datetime.now().isoformat(),
                       "previous_state": previous_state,
                       "settings": new_settings["settings"]}
