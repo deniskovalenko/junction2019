@@ -9,16 +9,16 @@ import Button from '@material-ui/core/Button';
 
 export class Demo extends Component {
     RELAXATION_BRIGHTNESS = 20;
-    RELAXATION_TEMPERATURE = 3400;
+    RELAXATION_TEMPERATURE = 6000;
 
     EVENING_BRIGHTNESS = 30;
-    EVENING_TEMPERATURE = 3900;
+    EVENING_TEMPERATURE = 5000;
 
-    FOCUS_BRIGHTNESS = 60;
-    FOCUS_TEMPERATURE = 5000;
+    FOCUS_BRIGHTNESS = 70;
+    FOCUS_TEMPERATURE = 3900;
 
     WAKEUP_BRIGHTNESS = 40;
-    WAKEUP_TEMPERATURE = 6000;
+    WAKEUP_TEMPERATURE = 3400;
 
 
     constructor(props) {
@@ -183,13 +183,23 @@ export class Demo extends Component {
                     </Grid>
                     <Grid item xs={6}>
                         <Paper className={classes.paper}>
-                            <Button style={{margin: "10px", backgroundColor: "#d08e75"}} variant="contained" color="prima">
+                            <Button style={{margin: "10px", backgroundColor: "#d08e75"}} variant="contained"
+                                    color="prima" onClick={event => {
+                                this.setState({
+                                    color_temperature: this.EVENING_TEMPERATURE,
+                                    brightness: this.EVENING_BRIGHTNESS
+                                }, () => {
+                                    this.save_settings("cozy_evening")
+                                });
+                            }}>
                                 Cozy evening
                             </Button>
-                            <Button style={{margin: "10px", backgroundColor: "#6FB342"}} variant="contained" color="prima" onClick={event => {
+                            <Button style={{margin: "10px", backgroundColor: "#6FB342"}} variant="contained"
+                                    color="prima" onClick={event => {
                                 this.setState({
                                     color_temperature: this.RELAXATION_TEMPERATURE,
-                                    brightness: this.RELAXATION_BRIGHTNESS}, () => {
+                                    brightness: this.RELAXATION_BRIGHTNESS
+                                }, () => {
                                     this.save_settings("relaxation")
                                 });
                             }}>
@@ -200,10 +210,26 @@ export class Demo extends Component {
 
                     <Grid item xs={6}>
                         <Paper className={classes.paper}>
-                            <Button style={{margin: "10px", backgroundColor: "#919FFF"}} variant="contained" >
+                            <Button style={{margin: "10px", backgroundColor: "#919FFF"}} variant="contained"
+                                    onClick={event => {
+                                        this.setState({
+                                            color_temperature: this.FOCUS_TEMPERATURE,
+                                            brightness: this.FOCUS_BRIGHTNESS
+                                        }, () => {
+                                            this.save_settings("focus")
+                                        });
+                                    }}>
                                 Focus time
                             </Button>
-                            <Button style={{margin: "10px",backgroundColor: "#bbf495"}} variant="contained">
+                            <Button style={{margin: "10px", backgroundColor: "#bbf495"}} variant="contained"
+                                    onClick={event => {
+                                        this.setState({
+                                            color_temperature: this.WAKEUP_TEMPERATURE,
+                                            brightness: this.WAKEUP_BRIGHTNESS
+                                        }, () => {
+                                            this.save_settings("wakeup")
+                                        });
+                                    }}>
                                 Wakey-morning
                             </Button>
                         </Paper>

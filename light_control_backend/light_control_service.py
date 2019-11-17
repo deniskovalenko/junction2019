@@ -106,7 +106,7 @@ class LightControlService(object):
         self.cache[device_id] = settings_to_save
 
         self.update_light_settings(device_id, light_level_value, color_temperature_value)
-        self.log_update(device_id, previous_state, settings_to_save, type, user)
+        self.log_update(device_id, previous_state, settings_to_save, type, user, light_settings.get("meta"))
         return "OK"
 
 
@@ -116,7 +116,7 @@ class LightControlService(object):
                                                light_level_value,
                                                color_temperature_value)
 
-    def log_update(self, device_id, previous_state, new_settings, type, user):
+    def log_update(self, device_id, previous_state, new_settings, type, user, meta):
         log_object = {"id": new_settings["id"],
                       "device_id": device_id,
                       "location": "meeting_room_hq13-2",
@@ -125,6 +125,8 @@ class LightControlService(object):
                       "previous_state": previous_state,
                       "settings": new_settings["settings"],
                       "type": type}
+        if meta is not None:
+            log_object["meta"] = meta
         print(log_object)
         res = es.index(index='my_test', body=log_object)
         print("written to Elastic, result " + str(res))
