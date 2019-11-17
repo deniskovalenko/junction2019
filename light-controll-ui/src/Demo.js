@@ -1,15 +1,26 @@
 import React, {Component} from 'react'
 import Roundy from 'roundy';
-import RoundyGroup from 'roundy';
 import axios from 'axios';
 import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
-// const useStyles =
 
 export class Demo extends Component {
+    RELAXATION_BRIGHTNESS = 20;
+    RELAXATION_TEMPERATURE = 3400;
+
+    EVENING_BRIGHTNESS = 30;
+    EVENING_TEMPERATURE = 3900;
+
+    FOCUS_BRIGHTNESS = 60;
+    FOCUS_TEMPERATURE = 5000;
+
+    WAKEUP_BRIGHTNESS = 40;
+    WAKEUP_TEMPERATURE = 6000;
+
+
     constructor(props) {
         super(props);
         this.state = {
@@ -52,7 +63,7 @@ export class Demo extends Component {
             });
     }
 
-    setLight(type) {
+    setLight(type, meta) {
         axios.post('http://localhost:8070/api/v1/set_light', {
             device_id: this.state.device_id,
             settings: {
@@ -60,7 +71,8 @@ export class Demo extends Component {
                 color_temperature_value: this.state.color_temperature
             },
             type: type,
-            user: "elizaveta"
+            user: "elizaveta",
+            meta: meta
         })
             .then(function (response) {
                 console.log(response);
@@ -89,6 +101,10 @@ export class Demo extends Component {
     save_color_temperature(val) {
         console.log("saving color temperature to " + val);
         this.setLight("color")
+    }
+
+    save_settings(meta) {
+        this.setLight("preset", meta)
     }
 
     render() {
@@ -124,12 +140,14 @@ export class Demo extends Component {
                                     arcSize={300}
                                     sliced={false}
                                     onChange={brightness => {
-                                        this.setState({brightness: brightness});
-                                        this.update_brightness(brightness)
+                                        this.setState({brightness: brightness}, () => {
+                                            this.update_brightness(brightness)
+                                        });
                                     }}
                                     onAfterChange={(color_temperature, props) => {
-                                        this.setState({brightness: props.value});
-                                        this.save_brightness(props.value)
+                                        this.setState({brightness: props.value}, () => {
+                                            this.save_brightness(props.value)
+                                        });
                                     }}
                             />
                         </Paper>
@@ -149,12 +167,14 @@ export class Demo extends Component {
                                     arcSize={300}
                                     sliced={false}
                                     onChange={color_temperature => {
-                                        this.setState({color_temperature: color_temperature});
-                                        this.update_color_temperature(color_temperature)
+                                        this.setState({color_temperature: color_temperature}, () => {
+                                            this.update_color_temperature(color_temperature)
+                                        });
                                     }}
                                     onAfterChange={(color_temperature, props) => {
-                                        this.setState({color_temperature: props.value});
-                                        this.save_color_temperature(props.value)
+                                        this.setState({color_temperature: props.value}, () => {
+                                            this.save_color_temperature(props.value)
+                                        });
                                     }}
                             />
                             <Paper className={classes.paper}>
@@ -166,7 +186,13 @@ export class Demo extends Component {
                             <Button style={{margin: "10px", backgroundColor: "#d08e75"}} variant="contained" color="prima">
                                 Cozy evening
                             </Button>
-                            <Button style={{margin: "10px", backgroundColor: "#6FB342"}} variant="contained" color="prima">
+                            <Button style={{margin: "10px", backgroundColor: "#6FB342"}} variant="contained" color="prima" onClick={event => {
+                                this.setState({
+                                    color_temperature: this.RELAXATION_TEMPERATURE,
+                                    brightness: this.RELAXATION_BRIGHTNESS}, () => {
+                                    this.save_settings("relaxation")
+                                });
+                            }}>
                                 Relaxation
                             </Button>
                         </Paper>
@@ -193,4 +219,6 @@ export class Demo extends Component {
             </div>
         )
     }
+
+
 }
