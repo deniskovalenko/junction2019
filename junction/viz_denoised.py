@@ -55,7 +55,7 @@ for i in range(rolling, office_data.shape[0]):
     ims.append([im])
 
     b = sum(pd.DataFrame(original_frame).max().diff() / pd.DataFrame(original_frame).max() > 0.13)
-    print('Objects:', b)
+    print('Detect humans:', b)
 
 ani = animation.ArtistAnimation(fig, ims, interval=30, blit=True, repeat=False)
 # repeat_delay=1000)
