@@ -5,6 +5,8 @@ import cv2
 import time
 from rabbitmq import Subscriber
 import Vtt60Processed.Sample as Vtt60Processed
+import pandas as pd
+import requests
 
 
 class Streamer60():
@@ -69,19 +71,21 @@ class Streamer60():
 
         with open('sample_2.txt', 'a') as f:
             x_arrstr = np.char.mod('%d', sample_dict['amplitude'])
-            # x_arrstr -> should be 2d array "frame".
 
-            frame = np.reshape(180,110)
+            # x_arrstr -> should be 2d array "frame".
+            raw_data = ",".join(x_arrstr.flatten())
+            f.write(raw_data)
+            f.write('\n')
+
+            arr = np.array(sample_dict['amplitude'])
+
+            frame = np.reshape(arr, (180,110))
+            frame_transposed_flipped = np.flip(np.transpose(frame))
             frame_transposed_flipped = np.flip(np.transpose(frame))
             details_removed = frame_transposed_flipped
             details_removed = np.clip(frame_transposed_flipped, a_min=frame_transposed_flipped.max() - 15, a_max=None)
-            b = sum(pd.DataFrame(original_frame).max().diff() / pd.DataFrame(original_frame).max() > 0.13)
+            b = sum(pd.DataFrame(frame).max().diff() / pd.DataFrame(frame).max() > 0.13)
             self.report_people(b)
-
-
-        raw_data = ",".join(x_arrstr.flatten())
-            f.write(raw_data)
-            f.write('\n')
 
 
         if body is None or sample_dict is None:
