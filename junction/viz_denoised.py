@@ -28,8 +28,8 @@ def return_15_fps(frames):
 data_folder = "data/"
 
 # hyperparameters to tune
-rolling = 15
-min_amplitude = 90
+rolling = 5
+min_amplitude = 100
 
 office_data = np.loadtxt(data_folder + 'demo_short.txt', delimiter=',')
 print(office_data.shape)
@@ -84,4 +84,3 @@ for i in range(rolling, office_data.shape[0]):
 ani = animation.ArtistAnimation(fig, ims, interval=30, blit=True, repeat=False)
 # repeat_delay=1000)
 plt.show()
-
