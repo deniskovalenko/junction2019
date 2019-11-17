@@ -56,7 +56,7 @@ def report_people(number):
         light = 40
         temperature = 3450
     requests.post('http://10.100.15.151:8070/api/v1/set_light', json={"device_id": "EC22",
-                                                                      "type": "light",
+                                                                      "type": "brightness",
                                                                       "user": "radar_human_detection",
                                                                   "settings": {"light_level_value": light,
                                                                                "color_temperature_value": temperature}})
