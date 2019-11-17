@@ -5,6 +5,7 @@ import axios from 'axios';
 import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 // const useStyles =
 
@@ -113,55 +114,80 @@ export class Demo extends Component {
                     <Grid item xs={6}>
                         <Paper className={classes.paper}>
                             <Roundy style={{margin: "20px"}}
-                                allowClick
-                                value={this.state.brightness}
-                                radius={parseInt(radius)}
-                                min={0}
-                                max={100}
-                                color={color}
-                                stepSize={5}
-                                arcSize={300}
-                                sliced={false}
-                                onChange={brightness => {
-                                    this.setState({brightness: brightness});
-                                    this.update_brightness(brightness)
-                                }}
-                                onAfterChange={(color_temperature, props) => {
-                                    this.setState({brightness: props.value});
-                                    this.save_brightness(props.value)
-                                }}
+                                    allowClick
+                                    value={this.state.brightness}
+                                    radius={parseInt(radius)}
+                                    min={0}
+                                    max={100}
+                                    color={"#AEFF78"}
+                                    stepSize={5}
+                                    arcSize={300}
+                                    sliced={false}
+                                    onChange={brightness => {
+                                        this.setState({brightness: brightness});
+                                        this.update_brightness(brightness)
+                                    }}
+                                    onAfterChange={(color_temperature, props) => {
+                                        this.setState({brightness: props.value});
+                                        this.save_brightness(props.value)
+                                    }}
                             />
                         </Paper>
+                        <Paper className={classes.paper}>
+                            <b>Brightness: {this.state.brightness}</b></Paper>
                     </Grid>
                     <Grid item xs={6}>
                         <Paper className={classes.paper}>
                             <Roundy style={{margin: "20px"}}
-                                allowClick
-                                value={this.state.color_temperature}
-                                radius={parseInt(radius)}
-                                min={2700}
-                                max={6500}
-                                color={"#FF9C9B"}
-                                stepSize={50}
-                                arcSize={300}
-                                sliced={false}
-                                onChange={color_temperature => {
-                                    this.setState({color_temperature: color_temperature});
-                                    this.update_color_temperature(color_temperature)
-                                }}
-                                onAfterChange={(color_temperature, props) => {
-                                    this.setState({color_temperature: props.value});
-                                    this.save_color_temperature(props.value)
-                                }}
+                                    allowClick
+                                    value={this.state.color_temperature}
+                                    radius={parseInt(radius)}
+                                    min={2700}
+                                    max={6500}
+                                    color={"#CC6E4B"}
+                                    stepSize={50}
+                                    arcSize={300}
+                                    sliced={false}
+                                    onChange={color_temperature => {
+                                        this.setState({color_temperature: color_temperature});
+                                        this.update_color_temperature(color_temperature)
+                                    }}
+                                    onAfterChange={(color_temperature, props) => {
+                                        this.setState({color_temperature: props.value});
+                                        this.save_color_temperature(props.value)
+                                    }}
                             />
+                            <Paper className={classes.paper}>
+                                <b>Color temperature: {this.state.color_temperature}</b></Paper>
                         </Paper>
                     </Grid>
                     <Grid item xs={6}>
-                        <Paper className={classes.paper}>Brightness: {this.state.brightness}</Paper>
+                        <Paper className={classes.paper}>
+                            <Button style={{margin: "10px", backgroundColor: "#d08e75"}} variant="contained" color="prima">
+                                Cozy evening
+                            </Button>
+                            <Button style={{margin: "10px", backgroundColor: "#6FB342"}} variant="contained" color="prima">
+                                Relaxation
+                            </Button>
+                        </Paper>
                     </Grid>
 
                     <Grid item xs={6}>
-                        <Paper className={classes.paper}>Color temperature: {this.state.color_temperature}<br/></Paper>
+                        <Paper className={classes.paper}>
+                            <Button style={{margin: "10px", backgroundColor: "#919FFF"}} variant="contained" >
+                                Focus time
+                            </Button>
+                            <Button style={{margin: "10px",backgroundColor: "#bbf495"}} variant="contained">
+                                Wakey-morning
+                            </Button>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={6}>
+
+                    </Grid>
+
+                    <Grid item xs={6}>
+
                     </Grid>
                 </Grid>
             </div>

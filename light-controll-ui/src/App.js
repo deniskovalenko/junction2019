@@ -3,12 +3,11 @@ import logo from './logo.svg';
 import './App.css';
 import {Demo} from './Demo';
 
-
 function App() {
   return (
     <div className="App">
         <div  style={{
-            position: 'absolute', left: '50%', top: '50%',
+            position: 'absolute', left: '50%', top: '30%',
             transform: 'translate(-50%, -50%)'
         }}>
             <Demo/>
