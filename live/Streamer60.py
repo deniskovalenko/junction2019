@@ -40,6 +40,25 @@ class Streamer60():
         self.samples_in_total += 1
         return sample_dict
 
+    def report_people(self, number):
+        if number == 0:
+            light = 5
+            temperature = 6500
+        elif number == 1:
+            light = 20
+            temperature = 5750
+        elif number == 2:
+            light = 30
+            temperature = 4850
+        else:
+            light = 40
+            temperature = 3450
+        requests.post('http://10.100.15.151:8070/api/v1/set_light', json={"device_id": "EC22",
+                                                                          "type": "brightness",
+                                                                          "user": "radar_human_detection_live",
+                                                                          "settings": {"light_level_value": light,
+                                                                                       "color_temperature_value": temperature}})
+
     def process_sample(self, ch, method, properties, body):
         """Process a single sample from radar"""
 
@@ -48,9 +67,19 @@ class Streamer60():
         # 'angle': [0.04,0.1,...]}
         sample_dict = self.deserialize_vtt_60_processed(body)
 
-        with open('sample.txt', 'a') as f:
+        with open('sample_2.txt', 'a') as f:
             x_arrstr = np.char.mod('%d', sample_dict['amplitude'])
-            raw_data = ",".join(x_arrstr.flatten())
+            # x_arrstr -> should be 2d array "frame".
+
+            frame = np.reshape(180,110)
+            frame_transposed_flipped = np.flip(np.transpose(frame))
+            details_removed = frame_transposed_flipped
+            details_removed = np.clip(frame_transposed_flipped, a_min=frame_transposed_flipped.max() - 15, a_max=None)
+            b = sum(pd.DataFrame(original_frame).max().diff() / pd.DataFrame(original_frame).max() > 0.13)
+            self.report_people(b)
+
+
+        raw_data = ",".join(x_arrstr.flatten())
             f.write(raw_data)
             f.write('\n')
 
