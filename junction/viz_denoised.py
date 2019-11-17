@@ -5,7 +5,8 @@ import time
 import matplotlib
 import matplotlib.animation as animation
 import tkinter
-
+import requests
+import time
 
 def return_15_fps(frames):
     i = 0
@@ -41,6 +42,26 @@ print("rolling df shape" + str(df_ma.shape))
 # office_data = np.reshape((df.loc[rolling:,:]-df_ma.loc[rolling:,:]).to_numpy(),(df.loc[rolling:,:].shape[0],180,110)) # remove avg images - no background noize kind
 office_data = np.reshape(office_data, (office_data.shape[0], 180, 110))
 
+def report_people(number):
+    if number==0:
+        light = 5
+        temperature = 6500
+    elif number==1:
+        light = 20
+        temperature = 5750
+    elif number==2:
+        light = 30
+        temperature = 4850
+    else:
+        light = 40
+        temperature = 3450
+    requests.post('http://10.100.15.151:8070/api/v1/set_light', json={"device_id": "EC22",
+                                                                      "type": "light",
+                                                                      "user": "radar_human_detection",
+                                                                  "settings": {"light_level_value": light,
+                                                                               "color_temperature_value": temperature}})
+
+
 print(office_data.shape)
 matplotlib.use('TkAgg')
 ims = []
@@ -54,9 +75,13 @@ for i in range(rolling, office_data.shape[0]):
     im = plt.imshow(details_removed)
     ims.append([im])
 
-    b = sum(pd.DataFrame(original_frame).max().diff() / pd.DataFrame(original_frame).max() > 0.13)
-    print('Detect humans:', b)
+    if i % 10 == 0:
+        b = sum(pd.DataFrame(original_frame).max().diff() / pd.DataFrame(original_frame).max() > 0.13)
+        report_people(b)
+        print('Detected humans:', b)
+        time.sleep(1)
 
 ani = animation.ArtistAnimation(fig, ims, interval=30, blit=True, repeat=False)
 # repeat_delay=1000)
 plt.show()
+
