@@ -30,7 +30,7 @@ data_folder = "data/"
 rolling = 15
 min_amplitude = 90
 
-office_data = np.loadtxt(data_folder + 'demo.txt', delimiter=',')
+office_data = np.loadtxt(data_folder + 'demo_short.txt', delimiter=',')
 print(office_data.shape)
 # office_data = return_15_fps(office_data)
 print(office_data.shape)
@@ -50,10 +50,13 @@ for i in range(rolling, office_data.shape[0]):
     original_frame = office_data[i, :, :]
     frame_transposed_flipped = np.flip(np.transpose(original_frame))
     details_removed = frame_transposed_flipped
-    details_removed = np.clip(frame_transposed_flipped, a_min=min_amplitude, a_max=None) #to remove not intense pixels
+    details_removed = np.clip(frame_transposed_flipped, a_min=frame_transposed_flipped.max()-15, a_max=None) #to remove not intense pixels
     im = plt.imshow(details_removed)
     ims.append([im])
 
-ani = animation.ArtistAnimation(fig, ims, interval=34, blit=True, repeat=False)
+    b = sum(pd.DataFrame(original_frame).max().diff() / pd.DataFrame(original_frame).max() > 0.13)
+    print('Objects:', b)
+
+ani = animation.ArtistAnimation(fig, ims, interval=30, blit=True, repeat=False)
 # repeat_delay=1000)
 plt.show()
