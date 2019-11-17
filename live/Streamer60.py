@@ -11,7 +11,7 @@ import requests
 
 class Streamer60():
     def __init__(self,url='10.84.110.2',topic='radar60',only_latest=False):
-
+        self.i = 0
         self.url = url
         self.topic = topic
         self.only_latest = only_latest
@@ -43,6 +43,8 @@ class Streamer60():
         return sample_dict
 
     def report_people(self, number):
+        if number > 0:
+            number = number - 1
         if number == 0:
             light = 5
             temperature = 6500
@@ -53,7 +55,7 @@ class Streamer60():
             light = 30
             temperature = 4850
         else:
-            light = 40
+            light = 60
             temperature = 3450
         requests.post('http://10.100.15.151:8070/api/v1/set_light', json={"device_id": "EC22",
                                                                           "type": "brightness",
@@ -69,7 +71,7 @@ class Streamer60():
         # 'angle': [0.04,0.1,...]}
         sample_dict = self.deserialize_vtt_60_processed(body)
 
-        with open('sample_2.txt', 'a') as f:
+        with open('sample_test_run.txt', 'a') as f:
             x_arrstr = np.char.mod('%d', sample_dict['amplitude'])
 
             # x_arrstr -> should be 2d array "frame".
@@ -84,8 +86,10 @@ class Streamer60():
             frame_transposed_flipped = np.flip(np.transpose(frame))
             details_removed = frame_transposed_flipped
             details_removed = np.clip(frame_transposed_flipped, a_min=frame_transposed_flipped.max() - 15, a_max=None)
-            b = sum(pd.DataFrame(frame).max().diff() / pd.DataFrame(frame).max() > 0.13)
-            self.report_people(b)
+            self.i = self.i + 1
+            if self.i % 10 == 0:
+                b = sum(pd.DataFrame(frame).max().diff() / pd.DataFrame(frame).max() > 0.13)
+                self.report_people(b)
 
 
         if body is None or sample_dict is None:
